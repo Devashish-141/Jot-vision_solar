@@ -113,6 +113,14 @@ CREATE POLICY "Owners manage their forms"
   USING  (auth.uid() = created_by)
   WITH CHECK (auth.uid() = created_by);
 
+CREATE POLICY "Admins can delete forms"
+  ON public.forms FOR DELETE
+  USING (
+    (auth.jwt() ->> 'role') = 'admin' 
+    OR (auth.jwt() -> 'app_metadata' ->> 'role') = 'admin'
+    OR (auth.jwt() ->> 'email') = 'admin@visionsolar.com'
+  );
+
 -- form_elements policies
 DROP POLICY IF EXISTS "Elements readable with parent form" ON public.form_elements;
 DROP POLICY IF EXISTS "Only owner can write elements"      ON public.form_elements;

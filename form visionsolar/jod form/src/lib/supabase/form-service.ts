@@ -279,12 +279,13 @@ export const formService = {
   async deleteForm(id: string | number) {
     const supabase = createClient();
     
-    const { error } = await supabase
+    const { error, count } = await supabase
       .from('forms')
-      .delete()
+      .delete({ count: 'exact' })
       .eq('id', id);
 
     if (error) throw error;
+    if (count === 0) throw new Error("Could not delete form. You may not have permission, or it no longer exists.");
     return true;
   }
 };
