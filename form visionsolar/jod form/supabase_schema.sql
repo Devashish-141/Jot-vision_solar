@@ -34,7 +34,8 @@ CREATE TABLE IF NOT EXISTS public.forms (
   require_registration    BOOLEAN NOT NULL DEFAULT false,
   allow_submission_access BOOLEAN NOT NULL DEFAULT true,
   created_at              TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-  updated_at              TIMESTAMPTZ NOT NULL DEFAULT NOW()
+  updated_at              TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  views                   INTEGER NOT NULL DEFAULT 0
 );
 
 DROP TRIGGER IF EXISTS forms_updated_at ON public.forms;
@@ -198,3 +199,18 @@ FROM public.form_submissions fs
 JOIN public.forms f ON f.id = fs.form_id
 LEFT JOIN public.submission_responses sr ON sr.submission_id = fs.id
 GROUP BY fs.id, fs.form_id, f.title, fs.submitted_at, fs.submitter_email, fs.submitted_by;
+
+-- ----------------------------------------------------------------
+-- HELPER FUNCTION: increment form views
+-- ----------------------------------------------------------------
+CREATE OR REPLACE FUNCTION public.increment_form_views(form_id UUID)
+RETURNS void
+LANGUAGE plpgsql
+SECURITY DEFINER
+AS $$
+BEGIN
+  UPDATE public.forms
+  SET views = views + 1
+  WHERE id = form_id;
+END;
+$$;

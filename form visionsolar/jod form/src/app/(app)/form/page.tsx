@@ -116,8 +116,59 @@ export default function FormsPage() {
   const toggleStar = (id: string | number) =>
     setForms(prev => prev.map(f => f.id === id ? { ...f, starred: !f.starred } : f));
 
-  const deleteForm = (id: string | number) =>
-    setForms(prev => prev.filter(f => f.id !== id));
+  const deleteForm = async (id: string | number) => {
+    const promise = async () => {
+      // 1. Delete from database
+      await formService.deleteForm(id);
+      
+      // 2. Handle local draft cleanup if this is the active draft
+      if (typeof window !== 'undefined') {
+        const currentId = localStorage.getItem('vs_current_form_id');
+        if (String(id) === String(currentId)) {
+          localStorage.removeItem('vs_current_form_id');
+          localStorage.removeItem('vs_form_instances');
+        }
+      }
+      
+      // 3. Update local state
+      setForms(prev => prev.filter(f => f.id !== id));
+      return { name: 'Form' };
+    };
+
+    toast.promise(promise(), {
+      loading: 'Deleting form...',
+      success: 'Form deleted successfully',
+      error: 'Failed to delete form',
+    });
+  };
+
+  const deleteSelected = async () => {
+    const ids = Array.from(selected);
+    const promise = async () => {
+      // 1. Delete all from database
+      await Promise.all(ids.map(id => formService.deleteForm(id)));
+      
+      // 2. Handle local draft cleanup
+      if (typeof window !== 'undefined') {
+        const currentId = localStorage.getItem('vs_current_form_id');
+        if (ids.includes(currentId as any)) {
+          localStorage.removeItem('vs_current_form_id');
+          localStorage.removeItem('vs_form_instances');
+        }
+      }
+      
+      // 3. Update local state
+      setForms(prev => prev.filter(f => !selected.has(f.id)));
+      setSelected(new Set());
+      return { count: ids.length };
+    };
+
+    toast.promise(promise(), {
+      loading: `Deleting ${ids.length} forms...`,
+      success: (data: any) => `${data.count} forms deleted successfully`,
+      error: 'Failed to delete selected forms',
+    });
+  };
 
   const filtered = forms.filter(f =>
     f.title.toLowerCase().includes(search.toLowerCase())
@@ -192,7 +243,10 @@ export default function FormsPage() {
         <div className="bg-vision-green/5 border-b border-vision-green/20 px-8 py-2.5 flex items-center gap-4 animate-in slide-in-from-top-2 duration-200 shrink-0">
           <span className="text-sm font-semibold text-vision-green">{selected.size} selected</span>
           <div className="h-4 w-px bg-vision-green/20" />
-          <button className="text-sm text-mid-gray hover:text-red-500 font-medium flex items-center gap-1.5 transition-colors">
+          <button 
+            onClick={deleteSelected}
+            className="text-sm text-mid-gray hover:text-red-500 font-medium flex items-center gap-1.5 transition-colors"
+          >
             <Trash2 className="w-4 h-4" /> Delete
           </button>
           <button className="text-sm text-mid-gray hover:text-charcoal font-medium flex items-center gap-1.5 transition-colors">

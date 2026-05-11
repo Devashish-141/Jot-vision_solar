@@ -271,5 +271,20 @@ export const formService = {
       .getPublicUrl(filePath);
 
     return publicUrl;
+  },
+
+  /**
+   * Delete a form from Supabase
+   */
+  async deleteForm(id: string | number) {
+    const supabase = createClient();
+    
+    const { error } = await supabase
+      .from('forms')
+      .delete()
+      .eq('id', id);
+
+    if (error) throw error;
+    return true;
   }
 };
