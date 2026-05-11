@@ -2,8 +2,17 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
-import { Search, X, Clock, FileText, User, MapPin } from 'lucide-react';
+import { Search, X, Clock, FileText, User, MapPin, Menu } from 'lucide-react';
 import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import { 
+  Sheet, 
+  SheetContent, 
+  SheetTrigger,
+  SheetHeader,
+  SheetTitle
+} from '@/components/ui/sheet';
+import { SidebarContent } from './sidebar';
 import { mockJobs, mockClients } from '@/lib/mock-data';
 
 interface SearchResult {
@@ -23,6 +32,7 @@ export function Header() {
   const [results, setResults] = useState<SearchResult[]>([]);
   const [recentSearches, setRecentSearches] = useState<string[]>([]);
   const [showDropdown, setShowDropdown] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -119,13 +129,29 @@ export function Header() {
   };
 
   return (
-    <header className="h-16 bg-white border-b border-light-gray flex items-center justify-between px-6 shrink-0 z-40 relative">
+    <header className="h-16 bg-white border-b border-light-gray flex items-center justify-between px-4 md:px-6 shrink-0 z-40 relative">
       
-      {/* Left Area: Placeholder to keep center centered */}
-      <div className="hidden md:block min-w-[200px]"></div>
+      {/* Mobile Menu Button */}
+      <div className="lg:hidden flex items-center mr-2">
+        <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
+          <SheetTrigger 
+            render={
+              <Button variant="ghost" size="icon" className="text-mid-gray">
+                <Menu className="w-6 h-6" />
+              </Button>
+            }
+          />
+          <SheetContent side="left" className="p-0 w-[240px] border-r-0">
+            <SheetHeader className="sr-only">
+              <SheetTitle>Navigation Menu</SheetTitle>
+            </SheetHeader>
+            <SidebarContent />
+          </SheetContent>
+        </Sheet>
+      </div>
 
       {/* Center Area: Prominent Wide Search */}
-      <div className="relative flex-1 max-w-2xl mx-8">
+      <div className="relative flex-1 max-w-2xl lg:mx-8">
         <div className="relative w-full group">
           <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
             <Search className="h-4 w-4 text-mid-gray group-focus-within:text-vision-green transition-colors" />
@@ -134,7 +160,7 @@ export function Header() {
             ref={inputRef}
             id="global-search"
             type="text"
-            placeholder="Search forms, clients, templates..."
+            placeholder="Search forms..."
             value={query}
             onChange={(e) => {
               setQuery(e.target.value);
@@ -178,7 +204,7 @@ export function Header() {
                       <p className="text-sm font-semibold text-charcoal truncate">{r.title}</p>
                       <p className="text-xs text-mid-gray truncate leading-tight">{r.subtitle}</p>
                     </div>
-                    <span className="text-[10px] uppercase tracking-wider text-mid-gray font-medium bg-off-white px-2 py-0.5 rounded border border-light-gray/50">
+                    <span className="hidden sm:inline-block text-[10px] uppercase tracking-wider text-mid-gray font-medium bg-off-white px-2 py-0.5 rounded border border-light-gray/50">
                       {r.type}
                     </span>
                   </button>
@@ -217,22 +243,22 @@ export function Header() {
       </div>
 
       {/* Right Area: Status & Tools */}
-      <div className="flex items-center gap-4 min-w-[200px] justify-end">
+      <div className="flex items-center gap-2 md:gap-4 ml-2 justify-end">
         
-        {/* Date Display */}
-        <div className="flex flex-col items-end mr-2">
+        {/* Date Display - Hidden on extra small mobile */}
+        <div className="hidden sm:flex flex-col items-end mr-2">
           <p className="text-[10px] font-bold text-mid-gray tracking-widest uppercase">
-            {new Date().toLocaleDateString('en-AU', { weekday: 'long' })}
+            {new Date().toLocaleDateString('en-AU', { weekday: 'short' })}
           </p>
-          <p className="text-sm font-semibold text-charcoal">
-            {new Date().toLocaleDateString('en-AU', { day: 'numeric', month: 'short', year: 'numeric' })}
+          <p className="text-xs md:text-sm font-semibold text-charcoal">
+            {new Date().toLocaleDateString('en-AU', { day: 'numeric', month: 'short' })}
           </p>
         </div>
 
-        <div className="w-px h-8 bg-light-gray/70"></div>
+        <div className="hidden sm:block w-px h-8 bg-light-gray/70"></div>
 
         {/* Notifications */}
-        <button className="relative w-10 h-10 flex items-center justify-center rounded-lg text-mid-gray hover:bg-off-white hover:text-charcoal transition-all group border border-transparent hover:border-light-gray/50">
+        <button className="relative w-9 h-9 md:w-10 md:h-10 flex items-center justify-center rounded-lg text-mid-gray hover:bg-off-white hover:text-charcoal transition-all group border border-transparent hover:border-light-gray/50">
           <svg className="w-5 h-5 group-hover:animate-wiggle" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
           </svg>

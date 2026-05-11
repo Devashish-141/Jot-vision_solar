@@ -6,8 +6,6 @@ import Image from 'next/image';
 import { usePathname, useRouter } from 'next/navigation';
 import {
   LayoutDashboard,
-  MapPin,
-  Clock,
   ChevronLeft,
   ChevronRight,
   LogOut,
@@ -29,10 +27,9 @@ const navItems = [
 
 const currentUser = mockProfiles[0]; // Rahul Mandal (Admin)
 
-export function Sidebar() {
+export function SidebarContent({ collapsed = false }: { collapsed?: boolean }) {
   const pathname = usePathname();
   const router = useRouter();
-  const [collapsed, setCollapsed] = useState(false);
 
   const handleLogout = async () => {
     const supabase = createClient();
@@ -42,13 +39,7 @@ export function Sidebar() {
   };
 
   return (
-    <aside
-      className={`
-        relative flex flex-col h-full bg-white border-r border-light-gray
-        transition-all duration-300 ease-in-out shrink-0
-        ${collapsed ? 'w-[68px]' : 'w-[240px]'}
-      `}
-    >
+    <div className="flex flex-col h-full bg-white">
       {/* Logo */}
       <div className="flex items-center px-4 h-16 shrink-0 overflow-visible">
         {collapsed ? (
@@ -107,7 +98,7 @@ export function Sidebar() {
           if (collapsed) {
             return (
               <Tooltip key={item.href}>
-                <TooltipTrigger className="w-full">{linkContent}</TooltipTrigger>
+                <TooltipTrigger className="w-full text-left">{linkContent}</TooltipTrigger>
                 <TooltipContent side="right" className="font-medium">
                   {item.label}
                 </TooltipContent>
@@ -118,18 +109,6 @@ export function Sidebar() {
           return <div key={item.href}>{linkContent}</div>;
         })}
       </nav>
-
-      {/* Collapse Toggle */}
-      <div className="px-3 pb-2">
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={() => setCollapsed(!collapsed)}
-          className="w-full justify-center text-mid-gray hover:text-charcoal hover:bg-off-white h-8"
-        >
-          {collapsed ? <ChevronRight className="w-4 h-4" /> : <ChevronLeft className="w-4 h-4" />}
-        </Button>
-      </div>
 
       <Separator className="bg-light-gray" />
 
@@ -157,6 +136,34 @@ export function Sidebar() {
             <TooltipContent side={collapsed ? 'right' : 'top'}>Sign out</TooltipContent>
           </Tooltip>
         </div>
+      </div>
+    </div>
+  );
+}
+
+export function Sidebar() {
+  const [collapsed, setCollapsed] = useState(false);
+
+  return (
+    <aside
+      className={`
+        relative hidden lg:flex flex-col h-full bg-white border-r border-light-gray
+        transition-all duration-300 ease-in-out shrink-0
+        ${collapsed ? 'w-[68px]' : 'w-[240px]'}
+      `}
+    >
+      <SidebarContent collapsed={collapsed} />
+
+      {/* Collapse Toggle */}
+      <div className="absolute -right-3 top-20 z-10">
+        <Button
+          variant="outline"
+          size="icon"
+          onClick={() => setCollapsed(!collapsed)}
+          className="w-6 h-6 rounded-full bg-white border-light-gray shadow-sm hover:bg-off-white text-mid-gray"
+        >
+          {collapsed ? <ChevronRight className="w-3 h-3" /> : <ChevronLeft className="w-3 h-3" />}
+        </Button>
       </div>
     </aside>
   );
