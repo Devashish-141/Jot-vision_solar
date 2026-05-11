@@ -76,7 +76,7 @@ function MiniCalendar({ selectedDate, onSelect }: { selectedDate: Date; onSelect
   );
 }
 
-export function CalendarView() {
+export function CalendarView({ refreshKey: _ }: { refreshKey?: number } = {}) {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [view, setView] = useState<ViewType>('Day');
 
