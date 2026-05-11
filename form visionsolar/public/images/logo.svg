@@ -1,0 +1,10 @@
+<svg width="280" height="70" viewBox="0 0 280 70" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Green VISION block -->
+  <path d="M4 12C4 7.58 7.58 4 12 4H142L129 66H12C7.58 66 4 62.42 4 58V12Z" fill="#5C8F5A"/>
+  <!-- Orange SOLAR block -->
+  <path d="M144 4H272C276.42 4 280 7.58 280 12V58C280 62.42 276.42 66 272 66H131L144 4Z" fill="#E3A25B"/>
+  <!-- VISION text - Baseline lowered further for safer vertical centering -->
+  <text x="73" y="50" font-family="Arial, sans-serif" font-weight="900" font-size="34" fill="white" text-anchor="middle" font-style="italic">VISION</text>
+  <!-- SOLAR text - Baseline lowered further for safer vertical centering -->
+  <text x="210" y="50" font-family="Arial, sans-serif" font-weight="900" font-size="34" fill="white" text-anchor="middle" font-style="italic">SOLAR</text>
+</svg>

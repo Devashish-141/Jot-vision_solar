@@ -1,0 +1,10 @@
+<svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Green block -->
+  <path d="M4 4C4 2.895 4.895 2 6 2H22L19 20H6C4.895 20 4 19.105 4 18V4Z" fill="#5C8F5A"/>
+  <!-- Orange block -->
+  <path d="M18 20H34C35.105 20 36 20.895 36 22V36C36 37.105 35.105 38 34 38H15L18 20Z" fill="#E3A25B"/>
+  <!-- V text -->
+  <text x="13" y="15" font-family="Arial, sans-serif" font-weight="900" font-size="14" fill="white" text-anchor="middle" font-style="italic">V</text>
+  <!-- S text -->
+  <text x="26" y="33" font-family="Arial, sans-serif" font-weight="900" font-size="14" fill="white" text-anchor="middle" font-style="italic">S</text>
+</svg>
