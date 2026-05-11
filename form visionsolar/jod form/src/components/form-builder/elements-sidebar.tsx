@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { formElements, ElementCategory } from '@/lib/form-elements';
+import { formElements, ElementCategory, FormElementDef } from '@/lib/form-elements';
 import { DraggableSidebarElement } from './builder-elements';
 
 export function ElementsSidebar({ onAddElement }: { onAddElement?: (element: FormElementDef) => void }) {

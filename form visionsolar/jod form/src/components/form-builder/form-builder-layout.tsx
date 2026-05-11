@@ -22,7 +22,7 @@ import {
 } from '@dnd-kit/sortable';
 import { ElementsSidebar } from './elements-sidebar';
 import { FormCanvas } from './form-canvas';
-import { FormInstance, formElements } from '@/lib/form-elements';
+import { FormInstance, formElements, FormElementDef } from '@/lib/form-elements';
 import { DraggableSidebarElement, SortableFormItem, RenderFieldUI } from './builder-elements';
 import { formService } from '@/lib/supabase/form-service';
 import { FormSettingsView } from './form-settings-view';

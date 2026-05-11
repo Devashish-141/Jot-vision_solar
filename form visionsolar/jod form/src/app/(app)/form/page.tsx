@@ -101,7 +101,7 @@ export default function FormsPage() {
     loadForms();
   }, []);
 
-  const toggleSelect = (id: number) =>
+  const toggleSelect = (id: string | number) =>
     setSelected(prev => {
       const next = new Set(prev);
       next.has(id) ? next.delete(id) : next.add(id);
@@ -113,10 +113,10 @@ export default function FormsPage() {
     else setSelected(new Set(forms.map(f => f.id)));
   };
 
-  const toggleStar = (id: number) =>
+  const toggleStar = (id: string | number) =>
     setForms(prev => prev.map(f => f.id === id ? { ...f, starred: !f.starred } : f));
 
-  const deleteForm = (id: number) =>
+  const deleteForm = (id: string | number) =>
     setForms(prev => prev.filter(f => f.id !== id));
 
   const filtered = forms.filter(f =>
